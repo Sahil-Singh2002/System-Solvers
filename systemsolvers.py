@@ -278,28 +278,14 @@ def PLU(A,n):
 
 def Jacobi(A,b,n,x0,N):
     
-    # Continue here:...
-    L = np.tril(A)
-    U = np.triu(A)
-    D = np.diag(np.diag(A))
-    T = np.linalg.inv(D)@(L+U)
-    c = np.linalg.inv(D)@b
+    # Continue here:...    
+    x_approx = np.zeros([n,N+1])
     
-    x_list = [] 
-    
-    for k in np.arange(N+1):
-        x_k = T@x0 +c
-        for i in range(n):   
-            total_a = 0.0        
-            for j in range(n):
-                if j != i:                    
-                    total_a += A[i][j]*x0[j]
-                    x_k[i] = (-1*total_a + b[i])/A[i][i]
-        
-        x_list.append(x0)
-        x0 = x_k.copy()
-    
-    x_approx = np.hstack(np.array(x_list))
+    for k in np.arange(0,n):
+        x_approx[k,0]= x0[k]
+    for i in range(0,N):   
+        for j in range(0,n):
+            x_approx[j,i+1] = (b[j] - np.dot( a[j,0:j], x_approx[0:j,i] ) - np.dot(A[j,j+1:n],x_approx[j+1:n,i])) /A[j,j]
     return x_approx
 
 def Jacobi_plot(A,b,n,x0,N):
@@ -315,18 +301,14 @@ def Jacobi_plot(A,b,n,x0,N):
     # Continue here:...
     x_approx = Jacobi(A,b,n,x0,N)
     x_array = no_pivoting_solve(A,b,n)
-    
-    list_i = []
-    list_2 = []
+    #create an array with zeros inside of it so its just empty when we start
+    list_i, list_2 = np.zeros(N+1), np.zeros(N+1)
+      
     for k in range(N+1):
-        x_i = np.linalg.norm(x_array-x_approx[:,k],np.inf)
-        x_2 = np.linalg.norm(x_array-x_approx[:,k],2)
+        h = x[0:n,0] -x_approx[0:n,i]
+        error_2[i] = np.linalg.norm(h,2)
+        error_i[i] = np.linalg.norm(h,np.inf)
         
-        list_i.append(x_i)
-        list_2.append(x_2)
-        
-    error_i = np.array(list_i)
-    error_2 = np.array(list_2)
     
     
     # Plot
