@@ -15,5 +15,5 @@ The fifth function Jocobi returns an array of approximations to the solution of 
 
 The sixth function Jocobi plot plots the convergence of norm(x - x^k)_inf and norm(x-x^k)_2.
 
-    "$||x-x^{(k)}||_\infty$"
-    "$||x-x^{(k)}||_2$"
+    $||x-x^{(k)}||_\infty$
+    $||x-x^{(k)}||_2$
